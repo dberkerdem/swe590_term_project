@@ -1,0 +1,3 @@
+# In order to build and run this streamlit application use,
+docker build -t web_frontend .
+docker run -p 8501:8501 web_frontend
