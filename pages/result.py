@@ -4,6 +4,6 @@ import requests
 
 st.title("Result Page")
 
-results=requests.get('https://myservice.com/multiply_by_2')
+results=requests.get('http://localhost:8888/tree/Untitled%20Folder%202')
 
 st.write(results)
