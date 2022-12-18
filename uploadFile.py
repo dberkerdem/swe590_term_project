@@ -1,5 +1,4 @@
 import streamlit as st
-import requests
 import boto3
 from PIL import Image
 
@@ -44,7 +43,7 @@ submit=st.button("Submit")
 if image_file is not None:
     if submit:
         for file in image_file:
-            s3.Bucket('swe590-bucket').put_object(Key=file.name,Body=file.type)
+            s3.Bucket('swe590-bucket').put_object(Key='inputs/'+file.name,Body=file.type)
             message='File Uploaded Successfully'
             print('upload Successful')
             st.success("Saved successfully!")
