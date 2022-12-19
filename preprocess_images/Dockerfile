@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/python:3.8
+FROM python:3.8-slim
 
 # Copy function code
 COPY requirements.txt .
