@@ -19,3 +19,8 @@ def lambda_handler(event, context):
     empty_bucket(bucket=BUCKET_NAME)
     # Export Results as CSV
     predict.export_as_csv(input_list=predictions, bucket=BUCKET_NAME, key=RESULTS_KEY)
+    return 0
+
+
+if __name__ == '__main__':
+    lambda_handler()

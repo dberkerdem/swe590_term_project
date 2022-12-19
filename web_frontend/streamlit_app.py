@@ -45,7 +45,3 @@ def main():
             message = ' '.join(uploaded_files)
             # Publish message
             publish_sns(message=message)
-
-
-if __name__ == '__main__':
-    main()
