@@ -25,7 +25,7 @@ def cnn_predict(data: pd.DataFrame, key: str) -> pd.DataFrame:
 
 
 def load_model(key: str):
-    loaded_model = tf.keras.models.load_model('.../models/cnn/cnn_model.h5')
+    loaded_model = tf.keras.models.load_model('../../models/cnn/cnn_model.h5')
     return loaded_model
 
 
