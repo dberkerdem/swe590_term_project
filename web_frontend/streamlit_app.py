@@ -1,5 +1,5 @@
 import streamlit as st
-from utils.aws_tools import write_image_to_s3
+from utils.aws_tools import write_image_to_s3, publish_sns
 # from streamlit_toggle import st_toggle_switch
 import time
 
@@ -31,17 +31,20 @@ def main():
                                 "filetype": file.type
                                 }
                 st.write(file_details)
-
+    uploaded_files = list()
     if image_file is not None:
         if submit:
             for file in image_file:
                 write_image_to_s3(fileobj=file, bucket=BUCKET_NAME, key=DIR_NAME + file.name)
                 print('upload Successful')
                 st.success("Saved successfully!")
+                uploaded_files.append(file.name)
         # Wait 10 seconds after files are uploaded to s3 bucket
         time.sleep(10)
 
-
+    message = ' '.join(uploaded_files)
+    # Publish message
+    publish_sns(message=message)
 
 if __name__ == '__main__':
     main()
