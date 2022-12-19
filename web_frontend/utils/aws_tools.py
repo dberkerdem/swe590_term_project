@@ -3,6 +3,7 @@ import boto3
 
 REGION_NAME = 'eu-west-1'
 
+
 def boto3_connect(connect_to: str):
     """
     Implementation of boto3 client wrapper.
@@ -32,6 +33,7 @@ def write_image_to_s3(conn: object, fileobj: object, bucket: str, key: str) -> N
     :param key: The name of the key to upload to
     :return: None, void function
     """
+    # Upload file objects
     conn.upload_fileobj(Fileobj=fileobj, Bucket=bucket, Key=key)
     # Close to connection to prevent bottleneck
     conn.close()
@@ -40,11 +42,12 @@ def write_image_to_s3(conn: object, fileobj: object, bucket: str, key: str) -> N
 @boto3_connect(connect_to='sns')
 def publish_sns(conn: object, message: str, ) -> None:
     """
-    Implementation of publishing a message to a SNS Topic
+    Implementation of publishing a message to SNS Topic
     :param conn: a boto3 client object, that establishes a connection to the AWS resource of interest
     :param message: Message to be published in SNS Topic
     :return: None, void function
     """
+    # Publish a message
     conn.publish(
         TopicArn='arn:aws:sns:eu-west-1:624154963433:upload_complete_message',
         Message=message,
