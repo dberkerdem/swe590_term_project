@@ -69,7 +69,7 @@ def empty_bucket(bucket: str):
 
 
 @boto3_connect(connect_to='s3')
-def write_object_to_s3(conn: object, body: object, bucket: str, key: str) -> None:
+def write_object_to_s3(conn: object, bucket: str, body: object, key: str) -> None:
     """
     Implementation of uploading object to s3 bucket
     @param body:
@@ -79,6 +79,6 @@ def write_object_to_s3(conn: object, body: object, bucket: str, key: str) -> Non
     @return: None, void function
     """
     # Upload file objects
-    conn.put_obj(Bucket=bucket, Body=body, Key=key)
+    conn.put_object(Bucket=bucket, Body=body, Key=key)
     # Close to connection to prevent bottleneck
     conn.close()
