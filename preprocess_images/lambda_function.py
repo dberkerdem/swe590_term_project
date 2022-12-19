@@ -20,8 +20,6 @@ def lambda_handler(event, context):
             # Preprocess Image
             pixels = preprocess.preprocess_images(img_bytes=img_bytes)
             pixels_list.append(pixels[0])
-            print("Pixels are:")
-            print(pixels[0])
     except TypeError as e:
         print(f"Bucket is empty. Exception: {e}")
     # Empty the bucket
