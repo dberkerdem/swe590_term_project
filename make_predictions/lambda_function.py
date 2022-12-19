@@ -4,7 +4,7 @@ from src.modelling import predict
 
 BUCKET_NAME = 'swe590-bucket'
 CSV_KEY = 'outputs/pixels.csv'
-MODEL_KEY = 'cnn_model.h5'
+MODEL_KEY = './cnn_model.h5'
 RESULTS_KEY = 'results/results.csv'
 
 
@@ -18,7 +18,7 @@ def lambda_handler(event, context):
     # Empty the Bucket
     empty_bucket(bucket=BUCKET_NAME)
     # Export Results as CSV
-    predict.export_as_csv(input_list=predictions, bucket=BUCKET_NAME, key=RESULTS_KEY)
+    predict.export_as_csv(data=predictions, bucket=BUCKET_NAME, key=RESULTS_KEY)
 
 
 if __name__ == '__main__':

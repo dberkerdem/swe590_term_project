@@ -26,7 +26,7 @@ def boto3_connect(connect_to: str):
 @boto3_connect(connect_to='s3')
 def read_object_from_s3(conn: object, bucket: str, key: str):
     obj = conn.get_object(Bucket=bucket, Key=key)
-    conn.close()
+    # conn.close()
     return obj
 
 
@@ -59,4 +59,4 @@ def write_object_to_s3(conn: object, bucket: str, body: object, key: str) -> Non
     # Upload file objects
     conn.put_object(Bucket=bucket, Body=body, Key=key)
     # Close to connection to prevent bottleneck
-    conn.close()
+    # conn.close()

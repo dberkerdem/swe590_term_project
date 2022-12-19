@@ -1,6 +1,7 @@
 """Main method for lambda function in AWS"""
-from src.utils.aws_tools import list_objects_in_s3, empty_bucket, read_object_from_s3
+from src.utils.aws_tools import list_objects_in_s3, empty_bucket, read_object_from_s3, publish_sns
 from src.preprocessing import preprocess
+import time
 
 BUCKET_NAME = 'swe590-bucket'
 CSV_KEY = 'outputs/pixels.csv'
@@ -27,4 +28,8 @@ def lambda_handler(event, context):
     print("Bucket is unloaded")
     # Export CSV file
     preprocess.export_as_csv(pixels=pixels_list, bucket=BUCKET_NAME, key=CSV_KEY)
+    time.sleep(5)
+    message = f"{BUCKET_NAME}|{CSV_KEY}"
+    # Publish message
+    publish_sns(message=message)
     pass

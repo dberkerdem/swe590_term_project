@@ -1,6 +1,5 @@
 import streamlit as st
 from utils.aws_tools import write_image_to_s3, publish_sns
-# from streamlit_toggle import st_toggle_switch
 import time
 
 BUCKET_NAME = "swe590-bucket"
@@ -45,3 +44,7 @@ def main():
             message = ' '.join(uploaded_files)
             # Publish message
             publish_sns(message=message)
+
+
+if __name__ == '__main__':
+    main()

@@ -82,3 +82,20 @@ def write_object_to_s3(conn: object, bucket: str, body: object, key: str) -> Non
     conn.put_object(Bucket=bucket, Body=body, Key=key)
     # Close to connection to prevent bottleneck
     conn.close()
+
+
+@boto3_connect(connect_to='sns')
+def publish_sns(conn: object, message: str, ) -> None:
+    """
+    Implementation of publishing a message to SNS Topic
+    :param conn: a boto3 client object, that establishes a connection to the AWS resource of interest
+    :param message: Message to be published in SNS Topic
+    :return: None, void function
+    """
+    # Publish a message
+    conn.publish(
+        TopicArn='arn:aws:sns:eu-west-1:624154963433:upload_complete_message',
+        Message=message,
+    )
+    # Close to connection to prevent bottleneck
+    # conn.close()

@@ -13,8 +13,8 @@ def prepare_data(file_obj: object, image_res: int = 28) -> pd.DataFrame:
     # Convert to DataFrame
     data = pd.read_csv(io.StringIO(csv_string))
     # Reshape the DataFrame
-    test_data_reshaped = data.values.reshape(-1, image_res, image_res, 1) / 255.
-    return data
+    data_reshaped = data.values.reshape(-1, image_res, image_res, 1) / 255.
+    return data_reshaped
 
 
 def cnn_predict(data: pd.DataFrame, key: str) -> pd.DataFrame:
@@ -25,7 +25,7 @@ def cnn_predict(data: pd.DataFrame, key: str) -> pd.DataFrame:
 
 
 def load_model(key: str):
-    loaded_model = tf.keras.models.load_model('../../models/cnn/cnn_model.h5')
+    loaded_model = tf.keras.models.load_model(key)
     return loaded_model
 
 
