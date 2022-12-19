@@ -1,6 +1,7 @@
 """aws_tools script contains utility functions to perform read and write operations to AWS"""
 import boto3
 
+REGION_NAME = 'eu-west-1'
 
 def boto3_connect(connect_to: str):
     """
@@ -13,7 +14,7 @@ def boto3_connect(connect_to: str):
 
     def decorator(func):
         def wrapper(*args, **kwargs):
-            conn = boto3.client(connect_to)
+            conn = boto3.client(connect_to, region_name=REGION_NAME)
             return func(conn=conn, *args, **kwargs)
 
         return wrapper
