@@ -7,7 +7,6 @@ BUCKET_NAME = "swe590-bucket"
 DIR_NAME = "/inputs/"
 
 
-@st.cache
 def main():
     st.set_page_config(
         page_title="SWE-590",
@@ -38,7 +37,7 @@ def main():
             user_id = str(uuid.uuid1())
             # Upload images to s3
             for file in image_file:
-                write_image_to_s3(fileobj=file, bucket=BUCKET_NAME, key= user_id + DIR_NAME + file.name)
+                write_image_to_s3(fileobj=file, bucket=BUCKET_NAME, key=user_id + DIR_NAME + file.name)
                 print('upload Successful')
                 st.success("Saved successfully!")
                 uploaded_files.append(file.name)
@@ -47,6 +46,13 @@ def main():
             message = user_id
             # Publish message
             publish_sns(message=message)
+
+    if user_id:
+        # TODO: Slideshow here
+        print(f"user_id: {user_id}")
+        time.sleep(5)  # TODO: CHANGE TO 20 SEC
+        # TODO: Try to get results from s3 with this user_id after 20 sec
+        pass
 
 
 if __name__ == '__main__':
