@@ -11,30 +11,31 @@ RESULTS_KEY = '/results/results.csv'
 def main():
     st.set_page_config(
         page_title="SWE-590",
-        layout="wide"
+        # layout="wide"
     )
     st.title("Upload.py your Images")
 
-    # Initialize session state
-    "st.session_state object:", st.session_state
+    # Initialize the index to 0
     if 'index' not in st.session_state:
         st.session_state['index'] = 0
-
     # Initialize user_id to None
     user_id = None
+    if 'image_files' not in st.session_state:
+        st.session_state.image_files = None
 
-    image_files = st.file_uploader("Upload an Image", type=['png', 'jpeg', 'jpg'], accept_multiple_files=True)
-    for file in image_files:
+    st.session_state.image_files = st.file_uploader("Upload an Image", type=['png', 'jpeg', 'jpg'],
+                                                    accept_multiple_files=True)
+    for file in st.session_state.image_files:
         file.seek(0)
 
     submit = st.button("Submit Images")
 
-    if image_files:
+    if st.session_state.image_files:
         if submit:
             user_id = str(uuid.uuid1())
             # Upload images to s3
             counter = 0
-            for file in image_files:
+            for file in st.session_state.image_files:
                 counter += 1
                 write_image_to_s3(fileobj=file, bucket=BUCKET_NAME, key=user_id + DIR_NAME + file.name)
                 print('upload Successful')
@@ -67,24 +68,21 @@ def main():
             except Exception as e:
                 print(f"Exception {e}")
         pass
-    col1, col2, col3 = st.columns(1, 3, 1)
-
     # Display the uploaded images in a slideshow
-    if image_files:
-        # # Set the initial index to 0
-        # index = 0
+    if st.session_state.image_files:
+        col1, col2, col3 = st.columns((1, 3, 1))
 
         # Add a "Next" button
-        if st.session_state.index < len(image_files):
+        if st.session_state.index < len(st.session_state.image_files) - 1:
             if col3.button("Next"):
                 st.session_state.index += 1
-        if st.session_state.index > len(image_files):
+        if st.session_state.index > 0:
             if col1.button("Back"):
-                st.session_state.index += 1
+                st.session_state.index -= 1
 
         # Check if the index is still within the range of uploaded images
-        if len(image_files) > st.session_state.index >= 0:
-            col2.image(image_files[st.session_state.index], width=200)
+        if len(st.session_state.image_files) > st.session_state.index >= 0:
+            col2.image(st.session_state.image_files[st.session_state.index], width=200)
 
 
 if __name__ == '__main__':
