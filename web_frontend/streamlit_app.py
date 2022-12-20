@@ -1,11 +1,13 @@
 import streamlit as st
 from utils.aws_tools import write_image_to_s3, publish_sns
 import time
+import uuid
 
 BUCKET_NAME = "swe590-bucket"
-DIR_NAME = "inputs/"
+DIR_NAME = "/inputs/"
 
 
+@st.cache
 def main():
     st.set_page_config(
         page_title="SWE-590",
@@ -33,15 +35,16 @@ def main():
     uploaded_files = list()
     if image_file is not None:
         if submit:
+            user_id = str(uuid.uuid1())
             # Upload images to s3
             for file in image_file:
-                write_image_to_s3(fileobj=file, bucket=BUCKET_NAME, key=DIR_NAME + file.name)
+                write_image_to_s3(fileobj=file, bucket=BUCKET_NAME, key= user_id + DIR_NAME + file.name)
                 print('upload Successful')
                 st.success("Saved successfully!")
                 uploaded_files.append(file.name)
             # Wait 10 seconds after files are uploaded to s3 bucket
             time.sleep(10)
-            message = ' '.join(uploaded_files)
+            message = user_id
             # Publish message
             publish_sns(message=message)
 
