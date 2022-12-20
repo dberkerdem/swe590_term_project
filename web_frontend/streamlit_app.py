@@ -11,9 +11,9 @@ RESULTS_KEY = '/results/results.csv'
 def main():
     st.set_page_config(
         page_title="SWE-590",
-        # layout="wide"
+        layout="wide"
     )
-    st.title("Upload.py your Images")
+    st.title("Upload your Images")
 
     # Initialize the index to 0
     if 'index' not in st.session_state:
@@ -69,11 +69,12 @@ def main():
                 print(f"Exception {e}")
         pass
     # Display the uploaded images in a slideshow
-    if st.session_state.image_files:
+    if st.session_state.image_files and not submit:
+        st.title("Preview")
         col1, col2, col3 = st.columns((1, 3, 1))
 
         # Add a "Next" button
-        if st.session_state.index < len(st.session_state.image_files) - 1:
+        if st.session_state.index < len(st.session_state.image_files)-1:
             if col3.button("Next"):
                 st.session_state.index += 1
         if st.session_state.index > 0:
@@ -82,7 +83,7 @@ def main():
 
         # Check if the index is still within the range of uploaded images
         if len(st.session_state.image_files) > st.session_state.index >= 0:
-            col2.image(st.session_state.image_files[st.session_state.index], width=200)
+            col2.image(st.session_state.image_files[st.session_state.index], use_column_width=True)
 
 
 if __name__ == '__main__':
