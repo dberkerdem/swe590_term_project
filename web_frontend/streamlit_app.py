@@ -19,19 +19,19 @@ def main():
     # Initialize user_id to None
     user_id = None
 
-    image_file = st.file_uploader("Upload.py An Image", type=['png', 'jpeg', 'jpg'], accept_multiple_files=True)
-    for file in image_file:
+    image_files = st.file_uploader("Upload.py An Image", type=['png', 'jpeg', 'jpg'], accept_multiple_files=True)
+    for file in image_files:
         file.seek(0)
 
     submit = st.button("Submit Images")
 
     uploaded_files = list()
-    if image_file is not None:
+    if image_files is not None:
         if submit:
             user_id = str(uuid.uuid1())
             # Upload images to s3
             counter = 0
-            for file in image_file:
+            for file in image_files:
                 counter += 1
                 write_image_to_s3(fileobj=file, bucket=BUCKET_NAME, key=user_id + DIR_NAME + file.name)
                 print('upload Successful')
@@ -44,14 +44,28 @@ def main():
             publish_sns(message=message)
 
     if user_id:
-        ###########################################
-        # TODO - Afize: Insert slideshow here
-        ###########################################
+        # Display the uploaded images in a slideshow
+        if image_files:
+            # Set the initial index to 0
+            index = 0
+
+            # Display the first image
+            st.image(image_files[index], width=800)
+
+            # Add a "Next" button
+            if st.button("Next"):
+                index += 1
+
+            # Check if the index is still within the range of uploaded images
+            if index < len(image_files):
+                st.image(image_files[index], width=800)
+            else:
+                st.warning("No more images")
+        # Check s3 bucket for results
         print(f"user_id: {user_id}")
-        time.sleep(5)
         is_exist = False
         while not is_exist:
-            time.sleep(3)
+            time.sleep(5)
             try:
                 # get object
                 results_key = user_id + RESULTS_KEY
