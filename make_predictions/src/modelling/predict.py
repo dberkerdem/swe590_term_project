@@ -12,6 +12,10 @@ def prepare_data(file_obj: object, image_res: int = 28) -> pd.DataFrame:
     csv_string = body.read().decode('utf-8')
     # Convert to DataFrame
     data = pd.read_csv(io.StringIO(csv_string))
+    print("Shape of data is:", data.shape)
+    # Multiply negative values with -1
+    cols = data.select_dtypes(np.number).columns
+    data[cols] = data[cols].abs()
     # Reshape the DataFrame
     data_reshaped = data.values.reshape(-1, image_res, image_res, 1) / 255.
     return data_reshaped
@@ -41,8 +45,10 @@ def export_as_csv(data, bucket: str, key: str) -> None:
         outgoing_df = pd.DataFrame(data)
     elif isinstance(data, pd.DataFrame):
         outgoing_df = data
+    elif isinstance(data, np.ndarray):
+        outgoing_df = pd.DataFrame(data)
     else:
-        raise f"Invalid input type: {type(data)}"
+        raise Exception(f"Invalid input type: {type(data)}")
     # Create a buffer
     csv_buffer = io.StringIO()
     # Fill the buffer

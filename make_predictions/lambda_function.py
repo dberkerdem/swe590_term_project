@@ -14,6 +14,7 @@ def lambda_handler(event, context):
     # Prepare Object
     pixels_data = predict.prepare_data(file_obj=file_obj)
     # Make Predictions
+    print("Data to be predicted:", pixels_data)
     predictions = predict.cnn_predict(data=pixels_data, key=MODEL_KEY)
     # Empty the Bucket
     empty_bucket(bucket=BUCKET_NAME)

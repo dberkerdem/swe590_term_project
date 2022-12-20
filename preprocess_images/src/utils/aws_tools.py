@@ -94,7 +94,7 @@ def publish_sns(conn: object, message: str, ) -> None:
     """
     # Publish a message
     conn.publish(
-        TopicArn='arn:aws:sns:eu-west-1:624154963433:upload_complete_message',
+        TopicArn='arn:aws:sns:eu-west-1:624154963433:prepropcess_complete_message',
         Message=message,
     )
     # Close to connection to prevent bottleneck
