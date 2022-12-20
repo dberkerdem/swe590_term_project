@@ -63,23 +63,24 @@ def main():
             except Exception as e:
                 print(f"Exception {e}")
         pass
+    col1, col2, col3 = st.columns(1, 1, 1)
     # Display the uploaded images in a slideshow
     if image_files:
         # Set the initial index to 0
         index = 0
 
         # Display the first image
-        st.image(image_files[index], width=200)
+        col2.image(image_files[index], width=200)
 
         # Add a "Next" button
-        if st.button("Next"):
+        if col3.button("Next"):
             index += 1
 
         # Check if the index is still within the range of uploaded images
         if index < len(image_files):
-            st.image(image_files[index], width=200)
+            col2.image(image_files[index], width=200)
         else:
-            st.warning("No more images")
+            col1.button("Back")
 
 
 if __name__ == '__main__':
