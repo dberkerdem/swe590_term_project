@@ -14,7 +14,7 @@ def main():
         layout="wide"
     )
     st.title("Upload.py your Images")
-    st.sidebar.success("Select a page")
+    # st.sidebar.success("Select a page")
 
     # Initialize user_id to None
     user_id = None
@@ -51,7 +51,11 @@ def main():
             publish_sns(message=message)
 
     if user_id:
-        # TODO: Slideshow here
+        # Remove Success Messages
+        st.empty()
+        ###########################################
+        # TODO - Afize: Insert slideshow here
+        ###########################################
         print(f"user_id: {user_id}")
         time.sleep(20)
         is_exist = False
@@ -70,7 +74,6 @@ def main():
                 # set flag true
                 is_exist = True
             except Exception as e:
-                # TODO: Delete printing after DEBUG finish
                 print(f"Exception {e}")
         pass
 
