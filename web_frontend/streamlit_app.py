@@ -14,7 +14,11 @@ def main():
         layout="wide"
     )
     st.title("Upload.py your Images")
-    # st.sidebar.success("Select a page")
+
+    # Initialize session state
+    "st.session_state object:", st.session_state
+    if 'index' not in st.session_state:
+        st.session_state['index'] = 0
 
     # Initialize user_id to None
     user_id = None
@@ -63,24 +67,24 @@ def main():
             except Exception as e:
                 print(f"Exception {e}")
         pass
-    col1, col2, col3 = st.columns(1, 1, 1)
+    col1, col2, col3 = st.columns(1, 3, 1)
+
     # Display the uploaded images in a slideshow
     if image_files:
-        # Set the initial index to 0
-        index = 0
-
-        # Display the first image
-        col2.image(image_files[index], width=200)
+        # # Set the initial index to 0
+        # index = 0
 
         # Add a "Next" button
-        if col3.button("Next"):
-            index += 1
+        if st.session_state.index < len(image_files):
+            if col3.button("Next"):
+                st.session_state.index += 1
+        if st.session_state.index > len(image_files):
+            if col1.button("Back"):
+                st.session_state.index += 1
 
         # Check if the index is still within the range of uploaded images
-        if index < len(image_files):
-            col2.image(image_files[index], width=200)
-        else:
-            col1.button("Back")
+        if len(image_files) > st.session_state.index >= 0:
+            col2.image(image_files[st.session_state.index], width=200)
 
 
 if __name__ == '__main__':
