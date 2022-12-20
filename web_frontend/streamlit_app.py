@@ -24,16 +24,7 @@ def main():
         file.seek(0)
 
     submit = st.button("Submit Images")
-    show_details = st.button("Show Upload.py Details")
 
-    if image_file is not None:
-        if show_details:
-            for file in image_file:
-                # display the name and the type of the file
-                file_details = {"filename": file.name,
-                                "filetype": file.type
-                                }
-                st.write(file_details)
     uploaded_files = list()
     if image_file is not None:
         if submit:
@@ -46,13 +37,13 @@ def main():
                 uploaded_files.append(file.name)
             # Wait 10 seconds after files are uploaded to s3 bucket
             time.sleep(10)
+            # Remove Success Messages
+            st.empty()
             message = user_id
             # Publish message
             publish_sns(message=message)
 
     if user_id:
-        # Remove Success Messages
-        st.empty()
         ###########################################
         # TODO - Afize: Insert slideshow here
         ###########################################
