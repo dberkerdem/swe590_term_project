@@ -39,13 +39,11 @@ def main():
             st.success(f"{counter} Images Saved successfully!")
             # Wait 5 seconds after files are uploaded to s3 bucket
             time.sleep(5)
-            st.succes("")
             message = user_id
             # Publish message
             publish_sns(message=message)
 
     if user_id:
-        # TODO - Afize : Remove Success Messages
         ###########################################
         # TODO - Afize: Insert slideshow here
         ###########################################
@@ -53,7 +51,7 @@ def main():
         time.sleep(5)
         is_exist = False
         while not is_exist:
-            time.sleep(2)
+            time.sleep(3)
             try:
                 # get object
                 results_key = user_id + RESULTS_KEY
@@ -66,6 +64,7 @@ def main():
                 st.write(results)
                 # set flag true
                 is_exist = True
+                print(f"Results: {results}")
             except Exception as e:
                 print(f"Exception {e}")
         pass
