@@ -30,25 +30,27 @@ def main():
         if submit:
             user_id = str(uuid.uuid1())
             # Upload images to s3
+            counter = 0
             for file in image_file:
+                counter += 1
                 write_image_to_s3(fileobj=file, bucket=BUCKET_NAME, key=user_id + DIR_NAME + file.name)
                 print('upload Successful')
-                st.success("Saved successfully!")
                 uploaded_files.append(file.name)
-            # Wait 10 seconds after files are uploaded to s3 bucket
-            time.sleep(10)
-            # Remove Success Messages
-            st.empty()
+            st.success(f"{counter} Images Saved successfully!")
+            # Wait 5 seconds after files are uploaded to s3 bucket
+            time.sleep(5)
+            st.succes("")
             message = user_id
             # Publish message
             publish_sns(message=message)
 
     if user_id:
+        # TODO - Afize : Remove Success Messages
         ###########################################
         # TODO - Afize: Insert slideshow here
         ###########################################
         print(f"user_id: {user_id}")
-        time.sleep(20)
+        time.sleep(5)
         is_exist = False
         while not is_exist:
             time.sleep(2)
