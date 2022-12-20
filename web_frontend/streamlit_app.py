@@ -1,10 +1,11 @@
 import streamlit as st
-from utils.aws_tools import write_image_to_s3, publish_sns
+from utils.aws_tools import write_image_to_s3, publish_sns, read_object_from_s3
 import time
 import uuid
 
 BUCKET_NAME = "swe590-bucket"
 DIR_NAME = "/inputs/"
+RESULTS_KEY = '/results/results.csv'
 
 
 def main():
@@ -12,9 +13,11 @@ def main():
         page_title="SWE-590",
         layout="wide"
     )
-
     st.title("Upload.py your Images")
     st.sidebar.success("Select a page")
+
+    # Initialize user_id to None
+    user_id = None
 
     image_file = st.file_uploader("Upload.py An Image", type=['png', 'jpeg', 'jpg'], accept_multiple_files=True)
     for file in image_file:
@@ -50,8 +53,25 @@ def main():
     if user_id:
         # TODO: Slideshow here
         print(f"user_id: {user_id}")
-        time.sleep(5)  # TODO: CHANGE TO 20 SEC
-        # TODO: Try to get results from s3 with this user_id after 20 sec
+        time.sleep(20)
+        is_exist = False
+        while not is_exist:
+            time.sleep(2)
+            try:
+                # get object
+                results_key = user_id + RESULTS_KEY
+                file_obj = read_object_from_s3(bucket=BUCKET_NAME, key=results_key)
+                # Get lines of csv
+                lines = file_obj.get('Body').read().decode('utf-8').splitlines()
+                # Set the results
+                results = ' '.join(lines[1:])
+                # Write the results
+                st.write(results)
+                # set flag true
+                is_exist = True
+            except Exception as e:
+                # TODO: Delete printing after DEBUG finish
+                print(f"Exception {e}")
         pass
 
 

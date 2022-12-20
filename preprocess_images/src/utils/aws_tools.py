@@ -49,8 +49,6 @@ def read_object_from_s3(conn: object, bucket: str, key: str):
     # Get the object from bucket
     obj = conn.get_object(Bucket=bucket, Key=key)
     data = obj["Body"].read()
-    # Close to connection to prevent bottleneck
-    conn.close()
     return data
 
 
