@@ -11,7 +11,7 @@ RESULTS_KEY = '/results/results.csv'
 def main():
     st.set_page_config(
         page_title="SWE-590",
-        layout="wide"
+        layout="centered"
     )
     st.title("Upload your Images")
 
@@ -83,7 +83,7 @@ def main():
 
         # Check if the index is still within the range of uploaded images
         if len(st.session_state.image_files) > st.session_state.index >= 0:
-            col2.image(st.session_state.image_files[st.session_state.index], use_column_width=True)
+            col2.image(st.session_state.image_files[st.session_state.index], width=250)
 
 
 if __name__ == '__main__':
