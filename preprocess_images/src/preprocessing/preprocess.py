@@ -20,16 +20,16 @@ def preprocess_images(img_bytes: bytes) -> list:
     greyscale_array = np.array(greyscale_img)
     # Reshape from (28,28) to (1,784) for csv
     reshaped_array = greyscale_array.reshape(1, 784)
-    return reshaped_array[0]
+    return reshaped_array
 
 
 def export_as_csv(pixels: list, bucket: str, key: str) -> None:
     """
     Implementation of exporting a list
-    @param pixels:
-    @param bucket:
-    @param key:
-    @return:
+    @param pixels: Pixels list with a length of n rows and 784 columns
+    @param bucket: The name of the bucket to upload to
+    @param key: The name of the key to upload to
+    @return:None, void
     """
     pixels_df = pd.DataFrame(pixels)
     # Add column name prefix
@@ -40,4 +40,4 @@ def export_as_csv(pixels: list, bucket: str, key: str) -> None:
     pixels_df.to_csv(csv_buffer, header=True, index=False)
     csv_buffer.seek(0)
     # Write to s3 as csv
-    write_object_to_s3(Bucket=bucket, Body=csv_buffer.getvalue(), Key=key)
+    write_object_to_s3(bucket=bucket, body=csv_buffer.getvalue(), key=key)

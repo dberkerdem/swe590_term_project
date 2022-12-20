@@ -21,15 +21,17 @@ def boto3_connect(connect_to: str):
 
 
 @boto3_connect(connect_to='s3')
-def list_objects_in_s3(conn: object, bucket: str) -> list:
+def list_objects_in_s3(conn: object, bucket: str, prefix: str) -> list:
     """
     Implementation of listing all key of all objects within a bucket
     @param conn: A low-level client representing Amazon Resources
     @param bucket: The name of the bucket containing the objects
+    @param prefix: Limits the response to keys that begin with the specified prefix
     @return:
     """
     obj_list = conn.list_objects(
         Bucket=bucket,
+        Prefix=prefix,
     )
     # Return the list of contents
     return obj_list.get('Contents')
@@ -47,8 +49,6 @@ def read_object_from_s3(conn: object, bucket: str, key: str):
     # Get the object from bucket
     obj = conn.get_object(Bucket=bucket, Key=key)
     data = obj["Body"].read()
-    # Close to connection to prevent bottleneck
-    conn.close()
     return data
 
 
@@ -69,7 +69,7 @@ def empty_bucket(bucket: str):
 
 
 @boto3_connect(connect_to='s3')
-def write_object_to_s3(conn: object, body: object, bucket: str, key: str) -> None:
+def write_object_to_s3(conn: object, bucket: str, body: object, key: str) -> None:
     """
     Implementation of uploading object to s3 bucket
     @param body:
@@ -79,6 +79,38 @@ def write_object_to_s3(conn: object, body: object, bucket: str, key: str) -> Non
     @return: None, void function
     """
     # Upload file objects
-    conn.put_obj(Bucket=bucket, Body=body, Key=key)
+    conn.put_object(Bucket=bucket, Body=body, Key=key)
     # Close to connection to prevent bottleneck
     conn.close()
+
+
+@boto3_connect(connect_to='sns')
+def publish_sns(conn: object, message: str, ) -> None:
+    """
+    Implementation of publishing a message to SNS Topic
+    :param conn: a boto3 client object, that establishes a connection to the AWS resource of interest
+    :param message: Message to be published in SNS Topic
+    :return: None, void function
+    """
+    # Publish a message
+    conn.publish(
+        TopicArn='arn:aws:sns:eu-west-1:624154963433:prepropcess_complete_message',
+        Message=message,
+    )
+    # Close to connection to prevent bottleneck
+    # conn.close()
+
+
+@boto3_connect(connect_to='s3')
+def delete_object(conn: object, bucket: str, key: str) -> None:
+    """
+    Implementation of deleting an object from s3 bucket
+    @param conn: a boto3 client object, that establishes a connection to the AWS resource of interest
+    @param bucket: The name of the bucket
+    @param key: Key to the object
+    @return: None, void function
+    """
+    response = conn.delete_object(
+        Bucket=bucket,
+        Key=key,
+    )

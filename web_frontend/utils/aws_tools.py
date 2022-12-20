@@ -54,3 +54,17 @@ def publish_sns(conn: object, message: str, ) -> None:
     )
     # Close to connection to prevent bottleneck
     conn.close()
+
+
+@boto3_connect(connect_to='s3')
+def read_object_from_s3(conn: object, bucket: str, key: str):
+    """
+    Implementation of reading an object from s3
+    @param conn: a boto3 client object, that establishes a connection to the AWS resource of interest
+    @param bucket: Name of the bucket
+    @param key: Key of the object
+    @return:
+    """
+    obj = conn.get_object(Bucket=bucket, Key=key)
+    # conn.close()
+    return obj
