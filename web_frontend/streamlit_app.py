@@ -19,14 +19,13 @@ def main():
     # Initialize user_id to None
     user_id = None
 
-    image_files = st.file_uploader("Upload.py An Image", type=['png', 'jpeg', 'jpg'], accept_multiple_files=True)
+    image_files = st.file_uploader("Upload an Image", type=['png', 'jpeg', 'jpg'], accept_multiple_files=True)
     for file in image_files:
         file.seek(0)
 
     submit = st.button("Submit Images")
 
-    uploaded_files = list()
-    if image_files is not None:
+    if image_files:
         if submit:
             user_id = str(uuid.uuid1())
             # Upload images to s3
@@ -35,7 +34,6 @@ def main():
                 counter += 1
                 write_image_to_s3(fileobj=file, bucket=BUCKET_NAME, key=user_id + DIR_NAME + file.name)
                 print('upload Successful')
-                uploaded_files.append(file.name)
             st.success(f"{counter} Images Saved successfully!")
             # Wait 5 seconds after files are uploaded to s3 bucket
             time.sleep(5)
@@ -44,23 +42,6 @@ def main():
             publish_sns(message=message)
 
     if user_id:
-        # Display the uploaded images in a slideshow
-        if image_files:
-            # Set the initial index to 0
-            index = 0
-
-            # Display the first image
-            st.image(image_files[index], width=800)
-
-            # Add a "Next" button
-            if st.button("Next"):
-                index += 1
-
-            # Check if the index is still within the range of uploaded images
-            if index < len(image_files):
-                st.image(image_files[index], width=800)
-            else:
-                st.warning("No more images")
         # Check s3 bucket for results
         print(f"user_id: {user_id}")
         is_exist = False
@@ -82,6 +63,23 @@ def main():
             except Exception as e:
                 print(f"Exception {e}")
         pass
+    # Display the uploaded images in a slideshow
+    if image_files:
+        # Set the initial index to 0
+        index = 0
+
+        # Display the first image
+        st.image(image_files[index], width=200)
+
+        # Add a "Next" button
+        if st.button("Next"):
+            index += 1
+
+        # Check if the index is still within the range of uploaded images
+        if index < len(image_files):
+            st.image(image_files[index], width=200)
+        else:
+            st.warning("No more images")
 
 
 if __name__ == '__main__':
